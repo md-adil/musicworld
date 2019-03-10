@@ -1,0 +1,43 @@
+const webpack = require('webpack'),
+	path = require('path'),
+	HTMLWebpackPlugin = require('html-webpack-plugin'),
+	TSLintPlugin = require('tslint-webpack-plugin');
+
+module.exports = {
+	watch: true,
+	mode: 'development',
+	target: 'electron-renderer',
+	devtool: 'inline-source-map',
+	resolve: {  extensions: ['.ts', '.tsx', '.js'] },
+	entry: {
+		main: path.resolve(__dirname, '../src/index.ts')
+	},
+	module: {
+		rules: [
+			{ test: /\.tsx?$/, use: [ 'awesome-typescript-loader' ], exclude: /node_modules/ },
+			{ test: /\.scss$/, use: [ 'style-loader', 'css-loader', 'sass-loader' ] }
+		]
+	},
+	output: {
+		path: path.resolve('dist'),
+		filename: '[name].js',
+		publicPath: '/dist/'
+	},
+
+	plugins: [
+		new HTMLWebpackPlugin({
+			title: 'Music World'
+		}),
+		new TSLintPlugin({
+            files: [path.resolve(__dirname, '../src/**/*.ts')]
+        })
+	],
+
+	devServer: {
+		hot: true,
+		historyApiFallback: true,
+		contentBase: path.join(__dirname, 'dist'),
+		compress: true,
+		port: 8888
+	}
+}
